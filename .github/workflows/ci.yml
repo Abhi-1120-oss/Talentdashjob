@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: talentdash
+          POSTGRES_PASSWORD: talentdash
+          POSTGRES_DB: talentdash
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://talentdash:talentdash@localhost:5432/talentdash
+      OPENAI_API_KEY: test-key
+      API_KEY: test-api-key
+      QUEUE_BACKEND: asyncio
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build frontend
+        working-directory: talentdash/frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Install dependencies
+        working-directory: talentdash
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+          pip install prisma
+
+      - name: Validate Prisma schema
+        working-directory: talentdash
+        run: prisma validate
+
+      - name: Generate Prisma client
+        working-directory: talentdash
+        run: prisma generate
+
+      - name: Run migrations
+        working-directory: talentdash
+        run: prisma db push --skip-generate
+
+      - name: Lint
+        working-directory: talentdash
+        run: ruff check src tests
+
+      - name: Unit tests
+        working-directory: talentdash
+        env:
+          PYTHONPATH: src
+        run: pytest tests/unit -v
+
+      - name: Integration tests
+        working-directory: talentdash
+        env:
+          PYTHONPATH: src
+        run: pytest tests/integration -v --ignore=tests/integration/test_db_integration.py

@@ -1,0 +1,16 @@
+field_completeness: 0.15
+extraction_confidence: 0.15
+llm_confidence: 0.15
+salary_consistency: 0.10
+level_inference: 0.10
+source_reliability: 0.10
+validation_quality: 0.10
+dedupe_uniqueness: 0.15
+
+source_weights:
+  ambitionbox: 0.85
+  glassdoor: 0.80
+  api: 0.95
+  manual: 0.90
+
+human_review_threshold: 0.65

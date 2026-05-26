@@ -1,0 +1,84 @@
+generator client {
+  provider             = "prisma-client-py"
+  interface            = "asyncio"
+  recursive_type_depth = 5
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SalarySubmission {
+  id                 String   @id @default(uuid())
+  companyNormalized  String   @map("company_normalized")
+  role               String
+  levelStandardized  String   @map("level_standardized")
+  location           String
+  experienceYears    Float    @map("experience_years")
+  baseSalary         Float    @map("base_salary")
+  bonus              Float    @default(0)
+  stock              Float    @default(0)
+  totalCompensation  Float    @map("total_compensation")
+  confidenceScore    Float    @map("confidence_score")
+  confidenceBreakdown Json?   @map("confidence_breakdown")
+  source             String
+  sourceUrl          String?  @map("source_url")
+  dedupeHash         String   @map("dedupe_hash")
+  runId              String?  @map("run_id")
+  needsHumanReview   Boolean  @default(false) @map("needs_human_review")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@unique([dedupeHash])
+  @@index([companyNormalized, role, levelStandardized, location])
+  @@index([createdAt])
+  @@index([runId])
+  @@map("salary_submission")
+}
+
+model IngestionRun {
+  id        String   @id @default(uuid())
+  runId     String   @unique @map("run_id")
+  status    String
+  metrics   Json?
+  startedAt DateTime @default(now()) @map("started_at")
+  endedAt   DateTime? @map("ended_at")
+
+  @@map("ingestion_run")
+}
+
+model RejectionLog {
+  id        String   @id @default(uuid())
+  runId     String?  @map("run_id")
+  stage     String
+  reason    String
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([runId])
+  @@map("rejection_log")
+}
+
+model DuplicateLog {
+  id               String   @id @default(uuid())
+  runId            String?  @map("run_id")
+  dedupeHash       String   @map("dedupe_hash")
+  matchedSubmissionId String? @map("matched_submission_id")
+  payload          Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([runId])
+  @@map("duplicate_log")
+}
+
+model HumanReviewQueue {
+  id        String   @id @default(uuid())
+  runId     String?  @map("run_id")
+  payload   Json
+  reason    String
+  status    String   @default("pending")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("human_review_queue")
+}

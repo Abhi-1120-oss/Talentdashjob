@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="TalentDash — India-first salary intelligence" />
+  <link rel="manifest" href="/app/manifest.json" />
+  <link rel="stylesheet" href="/app/styles.css" />
+  <title>TalentDash</title>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <span class="logo">TD</span>
+      <div>
+        <h1>TalentDash</h1>
+        <p class="tagline">India-first compensation intelligence</p>
+      </div>
+    </div>
+    <button type="button" id="refreshBtn" class="icon-btn" title="Refresh" aria-label="Refresh data">↻</button>
+  </header>
+
+  <nav class="tab-nav" role="tablist" aria-label="Main navigation">
+    <button type="button" role="tab" data-view="browse" class="tab-item active" aria-selected="true">
+      <span class="tab-icon">💼</span>
+      <span>Salaries</span>
+    </button>
+    <button type="button" role="tab" data-view="companies" class="tab-item" aria-selected="false">
+      <span class="tab-icon">🏢</span>
+      <span>Companies</span>
+    </button>
+    <button type="button" role="tab" data-view="stats" class="tab-item" aria-selected="false">
+      <span class="tab-icon">📊</span>
+      <span>Stats</span>
+    </button>
+  </nav>
+
+  <main class="main">
+    <!-- Browse -->
+    <section id="browseView" class="view-panel" role="tabpanel">
+      <div id="quickStats" class="stats-bar hidden" aria-live="polite"></div>
+
+      <form id="searchForm" class="filters card" autocomplete="off">
+        <input type="search" id="company" name="company" placeholder="Company (e.g. google)" />
+        <input type="search" id="role" name="role" placeholder="Role (e.g. engineer)" />
+        <select id="location" name="location" aria-label="Location">
+          <option value="">All locations</option>
+        </select>
+        <select id="level" name="level" aria-label="Level">
+          <option value="">All levels</option>
+        </select>
+        <select id="sort" name="sort" aria-label="Sort by">
+          <option value="total_desc">Highest pay</option>
+          <option value="total_asc">Lowest pay</option>
+          <option value="confidence_desc">Best confidence</option>
+          <option value="created_at_desc">Newest</option>
+        </select>
+        <div class="filter-actions">
+          <button type="submit" id="searchBtn" class="btn primary">Search</button>
+          <button type="button" id="clearBtn" class="btn secondary">Clear</button>
+        </div>
+      </form>
+
+      <div id="loading" class="state-msg hidden" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Loading salaries…</p>
+      </div>
+      <div id="error" class="state-msg error hidden" role="alert"></div>
+      <div id="results" class="results"></div>
+      <div id="pagination" class="pagination hidden"></div>
+    </section>
+
+    <!-- Companies -->
+    <section id="companiesView" class="view-panel hidden" role="tabpanel">
+      <div class="panel-header">
+        <h2>Companies</h2>
+        <p class="hint">Tap a company to view its salaries</p>
+      </div>
+      <div id="companyLoading" class="state-msg hidden"><div class="spinner"></div></div>
+      <div id="companyError" class="state-msg error hidden" role="alert"></div>
+      <div id="companyList" class="results"></div>
+      <div id="companyPagination" class="pagination hidden"></div>
+    </section>
+
+    <!-- Stats -->
+    <section id="statsView" class="view-panel hidden" role="tabpanel">
+      <div class="panel-header">
+        <h2>Platform stats</h2>
+      </div>
+      <div id="statsLoading" class="state-msg hidden"><div class="spinner"></div></div>
+      <div id="statsError" class="state-msg error hidden" role="alert"></div>
+      <div id="platformStats" class="card stats-card"></div>
+      <div id="locationBreakdown" class="card hidden"></div>
+    </section>
+  </main>
+
+  <!-- Salary detail modal -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <div class="modal-content card">
+      <button type="button" class="modal-close" data-action="close-modal" aria-label="Close">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <footer class="footer">
+    <a href="/docs" target="_blank" rel="noopener">API Docs</a>
+    <span>·</span>
+    <a href="/openapi.json" target="_blank" rel="noopener">OpenAPI</a>
+    <span>·</span>
+    <span id="dbStatus" class="db-status">—</span>
+  </footer>
+
+  <script src="/app/app.js"></script>
+</body>
+</html>

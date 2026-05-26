@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: talentdash
+      POSTGRES_PASSWORD: talentdash
+      POSTGRES_DB: talentdash
+    ports:
+      - "5432:5432"
+    volumes:
+      - talentdash_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U talentdash -d talentdash"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  talentdash_pg:

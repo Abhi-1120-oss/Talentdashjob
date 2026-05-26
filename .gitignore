@@ -1,0 +1,14 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+reports/
+*.egg-info/
+dist/
+build/
+node_modules/
+prisma/migrations/*_migration.sql.bak
