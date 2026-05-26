@@ -1,14 +1,15 @@
 import { useCallback, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useFilters, useSalaries } from "@/hooks/useSalaries";
 import { FilterBar, type FilterValues } from "@/components/salary/FilterBar";
 import { SalaryCard } from "@/components/salary/SalaryCard";
 import { SalaryDetailSheet } from "@/components/salary/SalaryDetailSheet";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import type { SalaryRecord } from "@/lib/types";
 import { useCompare } from "@/context/CompareContext";
-import { Link } from "react-router-dom";
+import { Scale } from "lucide-react";
 
 const defaultFilters: FilterValues = {
   company: "",
@@ -72,18 +73,22 @@ export function ExplorePage() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Explore salaries</h1>
-          <p className="text-muted-foreground">Search India tech compensation data</p>
-        </div>
-        {compareIds.length > 0 && (
-          <Button asChild variant="outline">
-            <Link to={`/compare?ids=${compareIds.join(",")}`}>Compare ({compareIds.length})</Link>
-          </Button>
-        )}
-      </div>
+    <div className="space-y-8">
+      <PageHeader
+        badge="Explore"
+        title="Salary explorer"
+        description="Search India tech compensation with AI-powered filters"
+        action={
+          compareIds.length > 0 ? (
+            <Button asChild variant="outline" className="gap-2">
+              <Link to={`/compare?ids=${compareIds.join(",")}`}>
+                <Scale className="h-4 w-4" />
+                Compare ({compareIds.length})
+              </Link>
+            </Button>
+          ) : undefined
+        }
+      />
 
       <FilterBar
         values={filters}
@@ -94,25 +99,25 @@ export function ExplorePage() {
       />
 
       {isLoading && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-48 w-full" />
+            <Skeleton key={i} className="h-52" />
           ))}
         </div>
       )}
 
       {isError && (
-        <p className="rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-400">
+        <p className="rounded-2xl border border-[#FF385C]/20 bg-[#FFF1F2] p-4 text-sm font-medium text-[#FF385C]">
           {(error as Error).message}
         </p>
       )}
 
       {data && (
         <>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm font-medium text-muted-foreground">
             {data.meta.total} results · page {data.meta.page} of {data.meta.total_pages}
           </p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {data.data.map((record) => (
               <SalaryCard
                 key={record.id}
@@ -124,19 +129,11 @@ export function ExplorePage() {
             ))}
           </div>
           {data.meta.total_pages > 1 && (
-            <div className="flex justify-center gap-2">
-              <Button
-                variant="outline"
-                disabled={!data.meta.has_prev}
-                onClick={() => applyFilters(filters, page - 1)}
-              >
+            <div className="flex justify-center gap-3 pt-2">
+              <Button variant="outline" disabled={!data.meta.has_prev} onClick={() => applyFilters(filters, page - 1)}>
                 Previous
               </Button>
-              <Button
-                variant="outline"
-                disabled={!data.meta.has_next}
-                onClick={() => applyFilters(filters, page + 1)}
-              >
+              <Button variant="outline" disabled={!data.meta.has_next} onClick={() => applyFilters(filters, page + 1)}>
                 Next
               </Button>
             </div>

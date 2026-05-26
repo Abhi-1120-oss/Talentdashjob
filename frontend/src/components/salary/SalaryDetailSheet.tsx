@@ -31,7 +31,7 @@ export function SalaryDetailSheet({ record, open, onOpenChange }: SalaryDetailSh
         <div className="mt-6">
           <h2 className="text-2xl font-bold capitalize">{record.company}</h2>
           <p className="text-muted-foreground">{record.role}</p>
-          <p className="mt-4 text-3xl font-bold text-success">{formatLpa(record.total_compensation_lpa)}</p>
+          <p className="mt-4 text-3xl font-semibold text-[#00A699]">{formatLpa(record.total_compensation_lpa)}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Badge>{record.level.toUpperCase()}</Badge>
             <Badge variant="secondary">{record.location}</Badge>

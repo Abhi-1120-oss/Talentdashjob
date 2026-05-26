@@ -1,9 +1,8 @@
+import { Trophy, TrendingUp } from "lucide-react";
 import type { SalaryRecord } from "@/lib/types";
-import { formatLpa } from "@/lib/format";
+import { formatLpa, capitalize } from "@/lib/format";
 import { bestByTotal, lowestByTotal, percentGap } from "@/lib/compare-utils";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { capitalize } from "@/lib/format";
 
 export function CompareSummary({ records }: { records: SalaryRecord[] }) {
   if (records.length < 2) return null;
@@ -16,31 +15,45 @@ export function CompareSummary({ records }: { records: SalaryRecord[] }) {
   const pct = percentGap(high, low);
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {winners.map((w) => (
-        <Card key={w.id} className="border-success/40 bg-success/5 p-4">
-          <Badge className="mb-2 bg-success text-success-foreground">Best total comp</Badge>
-          <p className="text-lg font-bold capitalize">{w.company}</p>
-          <p className="text-sm text-muted-foreground">{w.role}</p>
-          <p className="mt-2 text-2xl font-bold text-success">{formatLpa(w.total_compensation_lpa)}</p>
-          <p className="text-xs text-muted-foreground">
+        <div
+          key={w.id}
+          className="glass-card relative overflow-hidden border-[#00A699]/20 bg-gradient-to-br from-[#00A699]/5 to-white p-7"
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-[#00A699]/50 to-transparent" />
+          <Badge variant="success" className="mb-4 gap-1">
+            <Trophy className="h-3 w-3" />
+            Best total comp
+          </Badge>
+          <p className="text-lg font-semibold capitalize text-[#222222]">{w.company}</p>
+          <p className="text-sm text-[#717171]">{w.role}</p>
+          <p className="mt-4 text-[32px] font-semibold leading-none text-[#00A699]">
+            {formatLpa(w.total_compensation_lpa)}
+          </p>
+          <p className="mt-2 text-xs text-[#717171]">
             {capitalize(w.level)} · {capitalize(w.location)}
           </p>
-        </Card>
+        </div>
       ))}
       {records.length >= 2 && gap > 0 && (
-        <Card className="p-4 sm:col-span-1 lg:col-span-1">
-          <p className="text-sm font-medium text-muted-foreground">Spread vs lowest</p>
-          <p className="mt-2 text-2xl font-bold">+{gap.toFixed(1)} LPA</p>
+        <div className="glass-card p-7">
+          <div className="flex items-center gap-2 text-sm font-medium text-[#717171]">
+            <TrendingUp className="h-4 w-4 text-[#FF385C]" />
+            Spread vs lowest
+          </div>
+          <p className="mt-4 text-[32px] font-semibold text-[#222222]">+{gap.toFixed(1)} LPA</p>
           {pct !== null && (
-            <p className="text-sm text-muted-foreground">+{pct.toFixed(0)}% higher</p>
+            <span className="mt-3 inline-flex rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-semibold text-[#FF385C]">
+              +{pct.toFixed(0)}% higher
+            </span>
           )}
           {lowest && (
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="mt-4 text-xs text-[#717171]">
               Lowest: {capitalize(lowest.company)} at {formatLpa(lowest.total_compensation_lpa)}
             </p>
           )}
-        </Card>
+        </div>
       )}
     </div>
   );

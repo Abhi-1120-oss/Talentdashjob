@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Scale, X } from "lucide-react";
 import { useCompare } from "@/context/CompareContext";
 import { useCompareSalaries } from "@/hooks/useCompareSalaries";
-import { formatLpa, capitalize } from "@/lib/format";
+import { formatLpa } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 
 export function CompareTray() {
@@ -15,26 +15,26 @@ export function CompareTray() {
   const records = data?.data ?? [];
 
   return (
-    <div className="fixed bottom-16 left-0 right-0 z-50 border-t border-border bg-card/95 px-4 py-3 shadow-lg backdrop-blur md:bottom-0">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3">
-        <Scale className="hidden h-5 w-5 text-primary sm:block" />
+    <div className="fixed bottom-16 left-0 right-0 z-50 border-t border-[#EBEBEB] bg-white px-5 py-4 shadow-airbnb-lg lg:bottom-0 lg:left-[260px]">
+      <div className="mx-auto flex max-w-[1280px] flex-wrap items-center gap-4">
+        <Scale className="hidden h-5 w-5 text-[#FF385C] sm:block" />
         <div className="flex min-w-0 flex-1 flex-wrap gap-2">
           {ids.map((id) => {
             const record = records.find((r) => r.id === id);
             return (
               <span
                 key={id}
-                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-3 py-1 text-sm"
+                className="inline-flex items-center gap-2 rounded-full border border-[#EBEBEB] bg-[#F7F7F7] px-4 py-2 text-sm transition-colors hover:border-[#222222]/20"
               >
-                <span className="font-medium capitalize">
+                <span className="font-semibold capitalize text-[#222222]">
                   {record ? record.company : id.slice(0, 8)}
                 </span>
                 {record && (
-                  <span className="text-muted-foreground">{formatLpa(record.total_compensation_lpa)}</span>
+                  <span className="font-medium text-[#FF385C]">{formatLpa(record.total_compensation_lpa)}</span>
                 )}
                 <button
                   type="button"
-                  className="ml-1 rounded-full p-0.5 hover:bg-accent"
+                  className="rounded-full p-0.5 text-[#717171] hover:bg-white hover:text-[#222222]"
                   onClick={() => remove(id)}
                   aria-label="Remove from compare"
                 >
@@ -49,9 +49,7 @@ export function CompareTray() {
             Clear
           </Button>
           <Button asChild size="sm">
-            <Link to={`/compare?ids=${ids.join(",")}`}>
-              Compare ({ids.length})
-            </Link>
+            <Link to={`/compare?ids=${ids.join(",")}`}>Compare ({ids.length})</Link>
           </Button>
         </div>
       </div>

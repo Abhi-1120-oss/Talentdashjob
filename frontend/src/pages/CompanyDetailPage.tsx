@@ -21,8 +21,8 @@ export function CompanyDetailPage() {
     data.data.reduce((s, r) => s + r.total_compensation_lpa, 0) / data.data.length;
 
   return (
-    <div className="space-y-6">
-      <Button variant="ghost" size="sm" asChild className="gap-2">
+    <div className="space-y-8">
+      <Button variant="ghost" size="sm" asChild className="gap-2 -ml-2">
         <Link to="/companies">
           <ArrowLeft className="h-4 w-4" />
           All companies
@@ -30,35 +30,38 @@ export function CompanyDetailPage() {
       </Button>
 
       <div>
-        <h1 className="text-3xl font-bold capitalize">{decoded}</h1>
+        <h1 className="page-title capitalize">{decoded}</h1>
         {avgLpa ? (
-          <p className="text-muted-foreground">
-            Avg {formatLpa(avgLpa)} on this page · {data?.meta.total ?? 0} total records
+          <p className="page-subtitle">
+            Avg <span className="font-semibold text-[#FF385C]">{formatLpa(avgLpa)}</span> on this page ·{" "}
+            {data?.meta.total ?? 0} total records
           </p>
         ) : null}
       </div>
 
       {isLoading && (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-48" />
+            <Skeleton key={i} className="h-52" />
           ))}
         </div>
       )}
 
       {isError && (
-        <p className="text-red-400">{(error as Error).message}</p>
+        <p className="rounded-2xl border border-danger/20 bg-danger/5 p-4 text-sm font-medium text-danger">
+          {(error as Error).message}
+        </p>
       )}
 
       {data && (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {data.data.map((r) => (
               <SalaryCard key={r.id} record={r} onClick={setDetail} />
             ))}
           </div>
           {data.meta.total_pages > 1 && (
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-3">
               <Button variant="outline" disabled={!data.meta.has_prev} onClick={() => setPage((p) => p - 1)}>
                 Previous
               </Button>

@@ -99,7 +99,7 @@ function CompareMobileCards({
   return (
     <div className="space-y-4 md:hidden">
       {records.map((record) => (
-        <div key={record.id} className="rounded-lg border border-border p-4">
+        <div key={record.id} className="glass-card p-5">
           <div className="mb-3 flex items-start justify-between gap-2">
             <div>
               <p className="font-semibold capitalize">{record.company}</p>
@@ -131,7 +131,7 @@ function CompareMobileCards({
               return (
                 <div key={row.key} className="flex justify-between gap-4 border-b border-border/50 pb-2">
                   <dt className="text-muted-foreground">{row.label}</dt>
-                  <dd className={cn("text-right font-medium", isBest && "text-success")}>
+                  <dd className={cn("text-right font-medium", isBest && "text-[#00A699]")}>
                     {row.format(record)}
                     {delta && <span className="block text-xs text-muted-foreground">{delta}</span>}
                   </dd>
@@ -154,7 +154,7 @@ export function CompareTable({
 }) {
   if (records.length === 0) {
     return (
-      <p className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">
+      <p className="rounded-2xl border border-dashed border-border bg-muted/30 p-10 text-center text-muted-foreground">
         Select up to 3 offers below or from Explore to compare them here.
       </p>
     );
@@ -168,10 +168,10 @@ export function CompareTable({
   return (
     <>
       <CompareMobileCards records={records} onRemove={onRemove} />
-      <div className="hidden overflow-x-auto rounded-lg border border-border md:block">
+      <div className="glass-card hidden overflow-x-auto md:block">
         <table className="w-full min-w-[600px] text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted/50">
+            <tr className="border-b border-[#EBEBEB] bg-[#F7F7F7]">
               <th className="p-3 text-left font-medium text-muted-foreground">Metric</th>
               {records.map((r) => (
                 <th key={r.id} className="p-3 text-left font-semibold">
@@ -222,7 +222,7 @@ export function CompareTable({
                         return (
                           <td
                             key={r.id}
-                            className={cn("p-3 font-medium", best === i && "bg-success/10 text-success")}
+                            className={cn("p-3 font-medium", best === i && "bg-[#00A699]/8 text-[#00A699]")}
                           >
                             {row.format(r)}
                             {delta && (

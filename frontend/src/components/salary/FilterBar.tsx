@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,18 +27,18 @@ export function FilterBar({ values, filters, onChange, onSearch, onClear }: Filt
 
   return (
     <form
-      className="space-y-4 rounded-lg border border-border bg-card p-4"
+      className="glass-card space-y-5 p-5 md:p-6"
       onSubmit={(e) => {
         e.preventDefault();
         onSearch();
       }}
     >
+      <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        <SlidersHorizontal className="h-4 w-4 text-[#FF385C]" />
+        Filters
+      </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Input
-          placeholder="Company"
-          value={values.company}
-          onChange={(e) => set("company", e.target.value)}
-        />
+        <Input placeholder="Company" value={values.company} onChange={(e) => set("company", e.target.value)} />
         <Input placeholder="Role" value={values.role} onChange={(e) => set("role", e.target.value)} />
         <Select value={values.location || "all"} onValueChange={(v) => set("location", v === "all" ? "" : v)}>
           <SelectTrigger>
@@ -66,18 +66,8 @@ export function FilterBar({ values, filters, onChange, onSearch, onClear }: Filt
             ))}
           </SelectContent>
         </Select>
-        <Input
-          type="number"
-          placeholder="Min LPA"
-          value={values.minLpa}
-          onChange={(e) => set("minLpa", e.target.value)}
-        />
-        <Input
-          type="number"
-          placeholder="Max LPA"
-          value={values.maxLpa}
-          onChange={(e) => set("maxLpa", e.target.value)}
-        />
+        <Input type="number" placeholder="Min LPA" value={values.minLpa} onChange={(e) => set("minLpa", e.target.value)} />
+        <Input type="number" placeholder="Max LPA" value={values.maxLpa} onChange={(e) => set("maxLpa", e.target.value)} />
         <Select value={values.sort} onValueChange={(v) => set("sort", v)}>
           <SelectTrigger>
             <SelectValue placeholder="Sort" />
@@ -90,12 +80,12 @@ export function FilterBar({ values, filters, onChange, onSearch, onClear }: Filt
           </SelectContent>
         </Select>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button type="submit" className="gap-2">
           <Search className="h-4 w-4" />
           Search
         </Button>
-        <Button type="button" variant="secondary" onClick={onClear}>
+        <Button type="button" variant="outline" onClick={onClear}>
           Clear
         </Button>
       </div>

@@ -26,7 +26,7 @@ export function ComparePicker() {
   if (ids.length >= MAX_COMPARE) return null;
 
   return (
-    <div className="rounded-lg border border-dashed border-border p-4 space-y-4">
+    <div className="glass-card space-y-5 p-6">
       <div>
         <h2 className="font-semibold">Add offers to compare</h2>
         <p className="text-sm text-muted-foreground">
