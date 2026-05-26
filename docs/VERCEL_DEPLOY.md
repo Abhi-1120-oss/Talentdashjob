@@ -1,6 +1,6 @@
 # Deploy TalentDash on Vercel
 
-This repo is configured for **one-click Vercel deploy**: React UI + serverless read API (mock sample data).
+This repo is configured for **one-click Vercel deploy**: React UI + **static CDN data** (no Python serverless — fast and reliable).
 
 ## Quick deploy (GitHub)
 
@@ -18,7 +18,9 @@ No environment variables are required for the demo (mock data).
 | Part | URL | Notes |
 |------|-----|--------|
 | Web app | `/`, `/explore`, `/compare`, … | Static React SPA |
-| Read API | `/api/v1/*`, `/health` | Mock data (12 sample records) |
+| Data | `/data/bundle.json` | 12 sample salary records (cached 1 year) |
+
+`VITE_STATIC_API=true` is set in `vercel.json` so the app filters data in the browser — no `/api` calls.
 
 ## Optional environment variables
 

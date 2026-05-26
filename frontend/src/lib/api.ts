@@ -8,8 +8,16 @@ import type {
   SalaryRecord,
   SalarySearchParams,
 } from "./types";
+import { staticApi } from "./static-api";
 
-/** Empty = same origin (Vercel). Set VITE_API_BASE for a separate API host. */
+/**
+ * Static CDN bundle on Vercel (fast, no serverless).
+ * Set VITE_API_BASE to use a remote FastAPI backend instead.
+ */
+const USE_STATIC =
+  import.meta.env.VITE_STATIC_API === "true" ||
+  (import.meta.env.PROD && !import.meta.env.VITE_API_BASE);
+
 const API_BASE = import.meta.env.VITE_API_BASE ?? "";
 
 async function fetchJson<T>(path: string): Promise<T> {
@@ -33,7 +41,7 @@ function toQuery(params: Record<string, string | number | undefined>): string {
   return s ? `?${s}` : "";
 }
 
-export const api = {
+const remoteApi = {
   getSalaries: (params: SalarySearchParams) =>
     fetchJson<SalaryListResponse>(
       `/api/v1/salaries${toQuery({
@@ -75,3 +83,6 @@ export const api = {
   getHealth: () =>
     fetchJson<{ status: string; database: string; record_count?: number }>("/health"),
 };
+
+export const api = USE_STATIC ? staticApi : remoteApi;
+export const isStaticApi = USE_STATIC;
