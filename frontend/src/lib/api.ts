@@ -9,7 +9,8 @@ import type {
   SalarySearchParams,
 } from "./types";
 
-const API_BASE = "";
+/** Empty = same origin (Vercel). Set VITE_API_BASE for a separate API host. */
+const API_BASE = import.meta.env.VITE_API_BASE ?? "";
 
 async function fetchJson<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {

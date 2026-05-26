@@ -42,42 +42,35 @@ jobs:
           node-version: "20"
 
       - name: Build frontend
-        working-directory: talentdash/frontend
+        working-directory: frontend
         run: |
           npm install
           npm run build
 
       - name: Install dependencies
-        working-directory: talentdash
         run: |
           pip install -r requirements.txt
           pip install -e .
           pip install prisma
 
       - name: Validate Prisma schema
-        working-directory: talentdash
         run: prisma validate
 
       - name: Generate Prisma client
-        working-directory: talentdash
         run: prisma generate
 
       - name: Run migrations
-        working-directory: talentdash
         run: prisma db push --skip-generate
 
       - name: Lint
-        working-directory: talentdash
         run: ruff check src tests
 
       - name: Unit tests
-        working-directory: talentdash
         env:
           PYTHONPATH: src
         run: pytest tests/unit -v
 
       - name: Integration tests
-        working-directory: talentdash
         env:
           PYTHONPATH: src
         run: pytest tests/integration -v --ignore=tests/integration/test_db_integration.py
